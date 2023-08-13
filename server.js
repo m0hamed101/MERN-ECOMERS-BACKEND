@@ -24,6 +24,25 @@ mongoose.connect(process.env.CONNECTION, {
     .then(() => console.log("DB Connection Successfull!")).catch((err) => { console.log(err); });
 
 
+app.use(function (req, res, next) {
+    const allowedOrigins = [process.env.FRONTEND, process.env.TESTHOST];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        res.header('Access-Control-Allow-Credentials', true);
+        res.header(
+            "Access-Control-Allow-Methods",
+            "GET, POST, PUT, DELETE, OPTIONS"
+        );
+    }
+
+    next();
+});
+
+
+
+
 app.use(itemRoutes)
 app.use(cartRoutes)
 app.use(userRoutes)
